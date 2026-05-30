@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1>🏆 Club Manager</h1>
+    <p>Ingresá con tu cuenta de administrador</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-grupo">
+        <label for="id_username">Usuario</label>
+        {{ form.username }}
+      </div>
+      <div class="form-grupo">
+        <label for="id_password">Contraseña</label>
+        {{ form.password }}
+      </div>
+      {% if form.errors %}
+      <p style="color:#dc2626;font-size:.85rem;margin:.5rem 0">Usuario o contraseña incorrectos.</p>
+      {% endif %}
+      <button type="submit" class="btn btn-primario">Iniciar sesión</button>
+    </form>
+
+    <p style="margin-top:1rem;text-align:center;font-size:.85rem;color:#6b7280">
+      ¿No tenés cuenta? <a href="/usuarios/registro/">Registrarse</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

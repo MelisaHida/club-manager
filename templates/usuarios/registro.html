@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Registro — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1>Crear cuenta</h1>
+    <p>Registrate como administrador del club</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-grupo" style="margin-bottom:.75rem">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primario">Crear cuenta</button>
+    </form>
+
+    <p style="margin-top:1rem;text-align:center;font-size:.85rem;color:#6b7280">
+      ¿Ya tenés cuenta? <a href="/usuarios/login/">Iniciar sesión</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

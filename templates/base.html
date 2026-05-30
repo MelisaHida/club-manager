@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Club Manager{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --verde: #059669; --verde-oscuro: #047857; --verde-claro: #d1fae5;
+      --fondo: #f9fafb; --blanco: #ffffff; --gris: #6b7280;
+      --gris-claro: #f3f4f6; --borde: #e5e7eb; --texto: #111827;
+      --rojo: #dc2626; --rojo-claro: #fee2e2;
+      --amarillo: #d97706; --amarillo-claro: #fef3c7;
+    }
+    body { font-family: system-ui, sans-serif; background: var(--fondo); color: var(--texto); min-height: 100vh; }
+    a { color: var(--verde); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav { background: var(--verde-oscuro); color: white; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    nav .marca { font-weight: 700; font-size: 1.1rem; color: white; }
+    nav .nav-links { display: flex; gap: 1rem; align-items: center; }
+    nav .nav-links a { color: rgba(255,255,255,.8); font-size: .9rem; padding: .25rem .5rem; border-radius: 4px; }
+    nav .nav-links a:hover { color: white; background: rgba(255,255,255,.1); text-decoration: none; }
+    nav .nav-links .btn-logout { background: rgba(255,255,255,.15); padding: .3rem .8rem; border-radius: 6px; }
+
+    /* CONTENEDOR */
+    .contenedor { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* ENCABEZADO */
+    .encabezado { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .encabezado h1 { font-size: 1.5rem; font-weight: 700; }
+    .encabezado p { color: var(--gris); font-size: .9rem; margin-top: .2rem; }
+
+    /* BOTONES */
+    .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1rem; border-radius: 6px; font-size: .9rem; font-weight: 500; cursor: pointer; border: none; text-decoration: none; transition: opacity .15s; }
+    .btn:hover { opacity: .85; text-decoration: none; }
+    .btn-primario { background: var(--verde); color: white; }
+    .btn-secundario { background: white; color: var(--texto); border: 1px solid var(--borde); }
+    .btn-peligro { background: var(--rojo); color: white; }
+    .btn-outline { background: transparent; color: var(--rojo); border: 1px solid var(--rojo); }
+    .btn-sm { padding: .3rem .7rem; font-size: .82rem; }
+
+    /* TARJETA */
+    .tarjeta { background: white; border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; }
+    .tarjeta-cuerpo { padding: 1.25rem; }
+
+    /* ESTADÍSTICAS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat { background: white; border: 1px solid var(--borde); border-radius: 10px; padding: 1.25rem; }
+    .stat-valor { font-size: 2rem; font-weight: 700; color: var(--verde); }
+    .stat-label { font-size: .85rem; color: var(--gris); margin-top: .2rem; }
+
+    /* TABLA */
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    thead tr { background: var(--gris-claro); border-bottom: 1px solid var(--borde); }
+    th { padding: .75rem 1rem; text-align: left; font-weight: 600; color: var(--gris); }
+    td { padding: .75rem 1rem; border-bottom: 1px solid var(--borde); }
+    tbody tr:hover { background: var(--gris-claro); }
+    .acciones { display: flex; gap: .4rem; }
+
+    /* BADGES */
+    .badge { display: inline-block; padding: .2rem .6rem; border-radius: 20px; font-size: .78rem; font-weight: 500; }
+    .badge-activo { background: var(--verde-claro); color: var(--verde-oscuro); }
+    .badge-inactivo { background: var(--gris-claro); color: var(--gris); }
+    .badge-moroso { background: var(--rojo-claro); color: var(--rojo); }
+    .badge-regular { background: #e0e7ff; color: #3730a3; }
+    .badge-vip { background: var(--amarillo-claro); color: var(--amarillo); }
+    .badge-familiar { background: #fce7f3; color: #9d174d; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grupo { display: flex; flex-direction: column; gap: .4rem; }
+    .form-grupo.ancho-completo { grid-column: 1 / -1; }
+    label { font-size: .85rem; font-weight: 500; }
+    input, select, textarea { padding: .5rem .75rem; border: 1px solid var(--borde); border-radius: 6px; font-size: .9rem; width: 100%; }
+    input:focus, select:focus { outline: 2px solid var(--verde); border-color: var(--verde); }
+    .errorlist { color: var(--rojo); font-size: .8rem; list-style: none; margin-top: .2rem; }
+    .seccion-form { margin-bottom: 1.5rem; }
+    .seccion-form h3 { font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--borde); padding-bottom: .5rem; margin-bottom: 1rem; }
+
+    /* FILTROS */
+    .filtros { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center; }
+    .filtros input, .filtros select { width: auto; min-width: 150px; }
+
+    /* MENSAJES */
+    .mensajes { margin-bottom: 1rem; }
+    .mensaje { padding: .75rem 1rem; border-radius: 6px; font-size: .9rem; margin-bottom: .5rem; }
+    .mensaje-success { background: var(--verde-claro); color: var(--verde-oscuro); }
+    .mensaje-error { background: var(--rojo-claro); color: var(--rojo); }
+
+    /* VACÍO */
+    .vacio { text-align: center; padding: 3rem; color: var(--gris); }
+    .vacio p { margin-bottom: 1rem; }
+
+    /* DETALLE */
+    .detalle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 800px; }
+    .detalle-campo { margin-bottom: .75rem; }
+    .detalle-campo .etiqueta { font-size: .8rem; color: var(--gris); margin-bottom: .2rem; }
+    .detalle-campo .valor { font-weight: 500; }
+    .cuota-grande { font-size: 2rem; font-weight: 700; color: var(--verde); }
+
+    /* LOGIN */
+    .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .auth-card { background: white; border: 1px solid var(--borde); border-radius: 12px; padding: 2rem; width: 100%; max-width: 420px; }
+    .auth-card h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: .25rem; }
+    .auth-card p { color: var(--gris); font-size: .9rem; margin-bottom: 1.5rem; }
+    .auth-card .form-grupo { margin-bottom: 1rem; }
+    .auth-card .btn { width: 100%; justify-content: center; margin-top: .5rem; }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .detalle-grid { grid-template-columns: 1fr; }
+      .encabezado { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<nav>
+  <a class="marca" href="/">🏆 Club Manager</a>
+  <div class="nav-links">
+    <a href="/">Dashboard</a>
+    <a href="/socios/">Socios</a>
+    <a href="/socios/nuevo/">+ Nuevo</a>
+    <a href="/usuarios/perfil/">{{ user.username }}</a>
+    <a class="btn-logout" href="/usuarios/logout/">Salir</a>
+  </div>
+</nav>
+{% endif %}
+
+<div class="contenedor">
+  {% if messages %}
+  <div class="mensajes">
+    {% for m in messages %}
+    <div class="mensaje mensaje-{{ m.tags }}">{{ m }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% block contenido %}{% endblock %}
+</div>
+
+</body>
+</html>

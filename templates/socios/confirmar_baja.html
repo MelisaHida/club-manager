@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Confirmar baja — Club Manager{% endblock %}
+
+{% block contenido %}
+<div style="max-width:480px;margin:4rem auto;text-align:center">
+  <div class="tarjeta">
+    <div class="tarjeta-cuerpo" style="padding:2rem">
+      <div style="font-size:3rem;margin-bottom:1rem">⚠️</div>
+      <h1 style="font-size:1.25rem;margin-bottom:.5rem">Confirmar baja</h1>
+      <p style="color:#6b7280;margin-bottom:1.5rem">
+        ¿Estás seguro de que querés eliminar a <strong>{{ socio.nombre }} {{ socio.apellido }}</strong>?
+        Esta acción no se puede deshacer.
+      </p>
+      <form method="POST" style="display:flex;gap:.75rem;justify-content:center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-peligro">Sí, eliminar</button>
+        <a href="/socios/{{ socio.pk }}/" class="btn btn-secundario">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

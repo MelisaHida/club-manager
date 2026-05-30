@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }} — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <h1>{{ titulo }}</h1>
+    <p>Completá los datos del socio</p>
+  </div>
+</div>
+
+<div style="max-width:700px">
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="tarjeta" style="margin-bottom:1.5rem">
+      <div class="tarjeta-cuerpo">
+        <div class="seccion-form">
+          <h3>Datos personales</h3>
+          <div class="form-grid">
+            <div class="form-grupo">
+              <label for="id_nombre">Nombre *</label>
+              {{ form.nombre }}
+              {{ form.nombre.errors }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_apellido">Apellido *</label>
+              {{ form.apellido }}
+              {{ form.apellido.errors }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_email">Email *</label>
+              {{ form.email }}
+              {{ form.email.errors }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_telefono">Teléfono</label>
+              {{ form.telefono }}
+              {{ form.telefono.errors }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_dni">DNI *</label>
+              {{ form.dni }}
+              {{ form.dni.errors }}
+            </div>
+          </div>
+        </div>
+
+        <div class="seccion-form">
+          <h3>Domicilio (opcional)</h3>
+          <div class="form-grid">
+            <div class="form-grupo ancho-completo">
+              <label for="id_calle">Calle</label>
+              {{ form.calle }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_ciudad">Ciudad</label>
+              {{ form.ciudad }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_provincia">Provincia</label>
+              {{ form.provincia }}
+            </div>
+          </div>
+        </div>
+
+        <div class="seccion-form">
+          <h3>Membresía</h3>
+          <div class="form-grid">
+            <div class="form-grupo">
+              <label for="id_tipo">Tipo de socio *</label>
+              {{ form.tipo }}
+              {{ form.tipo.errors }}
+            </div>
+            <div class="form-grupo">
+              <label for="id_estado">Estado *</label>
+              {{ form.estado }}
+              {{ form.estado.errors }}
+            </div>
+            <div class="form-grupo" id="grupo-familiares">
+              <label for="id_cantidad_familiares">Cantidad de familiares</label>
+              {{ form.cantidad_familiares }}
+              {{ form.cantidad_familiares.errors }}
+              <small style="color:#6b7280">Solo para tipo Familiar</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.75rem">
+      <button type="submit" class="btn btn-primario">{{ accion }}</button>
+      <a href="/socios/" class="btn btn-secundario">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Mostrar/ocultar campo familiares según tipo seleccionado
+  const tipoSelect = document.getElementById('id_tipo');
+  const grupoFamiliares = document.getElementById('grupo-familiares');
+  function toggleFamiliares() {
+    grupoFamiliares.style.display = tipoSelect.value === 'familiar' ? '' : 'none';
+  }
+  tipoSelect.addEventListener('change', toggleFamiliares);
+  toggleFamiliares();
+</script>
+{% endblock %}

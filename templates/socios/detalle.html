@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block titulo %}{{ socio.nombre }} {{ socio.apellido }} — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <h1>{{ socio.nombre }} {{ socio.apellido }}</h1>
+    <p>{{ descripcion }}</p>
+  </div>
+  <div style="display:flex;gap:.5rem">
+    <a href="/socios/{{ socio.pk }}/editar/" class="btn btn-secundario">Editar</a>
+    <a href="/socios/{{ socio.pk }}/eliminar/" class="btn btn-outline">Dar de baja</a>
+  </div>
+</div>
+
+<div class="detalle-grid">
+
+  <div class="tarjeta">
+    <div class="tarjeta-cuerpo">
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;">Datos personales</h3>
+      <div class="detalle-campo">
+        <div class="etiqueta">Nombre completo</div>
+        <div class="valor">{{ socio.nombre }} {{ socio.apellido }}</div>
+      </div>
+      <div class="detalle-campo">
+        <div class="etiqueta">Email</div>
+        <div class="valor">{{ socio.email }}</div>
+      </div>
+      <div class="detalle-campo">
+        <div class="etiqueta">Teléfono</div>
+        <div class="valor">{{ socio.telefono|default:"—" }}</div>
+      </div>
+      <div class="detalle-campo">
+        <div class="etiqueta">DNI</div>
+        <div class="valor">{{ socio.dni }}</div>
+      </div>
+      {% if socio.calle %}
+      <div class="detalle-campo">
+        <div class="etiqueta">Domicilio</div>
+        <div class="valor">{{ socio.calle }}{% if socio.ciudad %}, {{ socio.ciudad }}{% endif %}{% if socio.provincia %}, {{ socio.provincia }}{% endif %}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <div class="tarjeta-cuerpo">
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;">Membresía</h3>
+      <div class="detalle-campo">
+        <div class="etiqueta">Tipo</div>
+        <span class="badge badge-{{ socio.tipo }}">{{ socio.get_tipo_display }}</span>
+      </div>
+      <div class="detalle-campo" style="margin-top:.75rem">
+        <div class="etiqueta">Estado</div>
+        <span class="badge badge-{{ socio.estado }}">{{ socio.get_estado_display }}</span>
+      </div>
+      {% if socio.tipo == 'familiar' %}
+      <div class="detalle-campo" style="margin-top:.75rem">
+        <div class="etiqueta">Familiares incluidos</div>
+        <div class="valor">{{ socio.cantidad_familiares }}</div>
+      </div>
+      {% endif %}
+      <div class="detalle-campo" style="margin-top:.75rem">
+        <div class="etiqueta">Cuota mensual</div>
+        <div class="cuota-grande">${{ cuota|floatformat:0 }}</div>
+      </div>
+      <div style="margin-top:1rem;padding:.75rem;background:{% if habilitado %}#d1fae5{% else %}#f3f4f6{% endif %};border-radius:6px;font-size:.9rem;color:{% if habilitado %}#047857{% else %}#6b7280{% endif %}">
+        {% if habilitado %}✅ Habilitado para acceder al club{% else %}🚫 Sin acceso a instalaciones{% endif %}
+      </div>
+
+      <!-- Cambio de estado directo -->
+      <form method="POST" action="/socios/{{ socio.pk }}/estado/" style="margin-top:1rem">
+        {% csrf_token %}
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <select name="estado" style="flex:1">
+            <option value="activo"   {% if socio.estado == 'activo'   %}selected{% endif %}>Activo</option>
+            <option value="inactivo" {% if socio.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+            <option value="moroso"   {% if socio.estado == 'moroso'   %}selected{% endif %}>Moroso</option>
+          </select>
+          <button type="submit" class="btn btn-secundario btn-sm">Cambiar estado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:1.5rem">
+  <a href="/socios/" class="btn btn-secundario btn-sm">← Volver a la lista</a>
+</div>
+{% endblock %}

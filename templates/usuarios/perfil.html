@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Mi perfil — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="encabezado">
+  <h1>Mi perfil</h1>
+</div>
+<div class="tarjeta" style="max-width:400px">
+  <div class="tarjeta-cuerpo">
+    <div class="detalle-campo">
+      <div class="etiqueta">Usuario</div>
+      <div class="valor">{{ usuario.username }}</div>
+    </div>
+    <div class="detalle-campo">
+      <div class="etiqueta">Email</div>
+      <div class="valor">{{ usuario.email|default:"—" }}</div>
+    </div>
+    <div class="detalle-campo">
+      <div class="etiqueta">Rol</div>
+      <div class="valor">{% if usuario.is_superuser %}Super Admin{% elif usuario.is_staff %}Administrador{% else %}Usuario{% endif %}</div>
+    </div>
+    <div class="detalle-campo">
+      <div class="etiqueta">Miembro desde</div>
+      <div class="valor">{{ usuario.date_joined|date:"d/m/Y" }}</div>
+    </div>
+    <div style="margin-top:1rem">
+      <a href="/usuarios/logout/" class="btn btn-outline">Cerrar sesión</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

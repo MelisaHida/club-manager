@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block titulo %}Socios — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <h1>Socios</h1>
+    <p>{{ total }} socio(s) encontrado(s)</p>
+  </div>
+  <a href="/socios/nuevo/" class="btn btn-primario">+ Nuevo socio</a>
+</div>
+
+<form method="GET" class="filtros">
+  <input name="q" value="{{ q }}" placeholder="Buscar nombre, email o DNI...">
+  <select name="tipo">
+    <option value="">Todos los tipos</option>
+    <option value="regular" {% if tipo_sel == 'regular' %}selected{% endif %}>Regular</option>
+    <option value="vip"     {% if tipo_sel == 'vip'     %}selected{% endif %}>VIP</option>
+    <option value="familiar"{% if tipo_sel == 'familiar'%}selected{% endif %}>Familiar</option>
+  </select>
+  <select name="estado">
+    <option value="">Todos los estados</option>
+    <option value="activo"   {% if estado_sel == 'activo'   %}selected{% endif %}>Activo</option>
+    <option value="inactivo" {% if estado_sel == 'inactivo' %}selected{% endif %}>Inactivo</option>
+    <option value="moroso"   {% if estado_sel == 'moroso'   %}selected{% endif %}>Moroso</option>
+  </select>
+  <button type="submit" class="btn btn-secundario">Filtrar</button>
+  <a href="/socios/" class="btn btn-secundario">Limpiar</a>
+</form>
+
+<div class="tarjeta">
+  {% if socios %}
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th><th>DNI</th><th>Tipo</th><th>Estado</th><th>Cuota</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in socios %}
+      <tr>
+        <td>
+          <strong>{{ s.nombre }} {{ s.apellido }}</strong><br>
+          <small style="color:#6b7280">{{ s.email }}</small>
+        </td>
+        <td>{{ s.dni }}</td>
+        <td><span class="badge badge-{{ s.tipo }}">{{ s.get_tipo_display }}</span></td>
+        <td><span class="badge badge-{{ s.estado }}">{{ s.get_estado_display }}</span></td>
+        <td>${{ s.calcular_cuota|floatformat:0 }}</td>
+        <td>
+          <div class="acciones">
+            <a href="/socios/{{ s.pk }}/"        class="btn btn-secundario btn-sm">Ver</a>
+            <a href="/socios/{{ s.pk }}/editar/" class="btn btn-secundario btn-sm">Editar</a>
+            <a href="/socios/{{ s.pk }}/eliminar/" class="btn btn-outline btn-sm">Baja</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="vacio">
+    <p>No se encontraron socios con esos filtros.</p>
+    <a href="/socios/" class="btn btn-secundario">Ver todos</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard — Club Manager{% endblock %}
+
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Bienvenido, {{ user.username }}. Resumen general del club.</p>
+  </div>
+  <a href="/socios/nuevo/" class="btn btn-primario">+ Nuevo socio</a>
+</div>
+
+<div class="stats-grid">
+  <div class="stat">
+    <div class="stat-valor">{{ total_socios }}</div>
+    <div class="stat-label">Total de socios</div>
+  </div>
+  <div class="stat">
+    <div class="stat-valor">{{ socios_activos }}</div>
+    <div class="stat-label">Socios activos</div>
+  </div>
+  <div class="stat">
+    <div class="stat-valor" style="color:#d97706">{{ socios_morosos }}</div>
+    <div class="stat-label">Socios morosos</div>
+  </div>
+  <div class="stat">
+    <div class="stat-valor">{{ socios_vip }}</div>
+    <div class="stat-label">Socios VIP</div>
+  </div>
+  <div class="stat">
+    <div class="stat-valor">${{ ingresos_mensuales|floatformat:0 }}</div>
+    <div class="stat-label">Ingresos mensuales estimados</div>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <div class="tarjeta-cuerpo">
+    <h2 style="font-size:1rem;font-weight:600;margin-bottom:1rem;">Últimos socios registrados</h2>
+    {% if socios_recientes %}
+    <table>
+      <thead>
+        <tr><th>Nombre</th><th>Tipo</th><th>Estado</th><th>Alta</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for s in socios_recientes %}
+        <tr>
+          <td>{{ s.nombre }} {{ s.apellido }}</td>
+          <td><span class="badge badge-{{ s.tipo }}">{{ s.get_tipo_display }}</span></td>
+          <td><span class="badge badge-{{ s.estado }}">{{ s.get_estado_display }}</span></td>
+          <td>{{ s.fecha_alta|date:"d/m/Y" }}</td>
+          <td><a href="/socios/{{ s.pk }}/" class="btn btn-secundario btn-sm">Ver</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="vacio">
+      <p>Aún no hay socios registrados.</p>
+      <a href="/socios/nuevo/" class="btn btn-primario">Crear primer socio</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
