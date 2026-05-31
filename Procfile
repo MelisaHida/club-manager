@@ -1,1 +1,1 @@
-web: python manage.py migrate --run-syncdb && python manage.py collectstatic --noinput && gunicorn club_manager.wsgi --bind 0.0.0.0:$PORT --log-file -
+web: python manage.py migrate --run-syncdb && python manage.py createsuperuser --noinput --username admin --email admin@club.com && python manage.py collectstatic --noinput && gunicorn club_manager.wsgi --bind 0.0.0.0:$PORT --log-file -
