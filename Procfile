@@ -1,2 +1,1 @@
-web: python manage.py collectstatic --noinput && gunicorn club_manager.wsgi --log-file -
-release: python manage.py migrate --run-syncdb
+web: python manage.py migrate --run-syncdb && python manage.py collectstatic --noinput && gunicorn club_manager.wsgi --bind 0.0.0.0:$PORT --log-file -
