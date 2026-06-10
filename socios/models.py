@@ -79,19 +79,19 @@ class SocioBase(Persona):
     def esta_habilitado(self): return self.__estado == "activo"
 
 class SocioRegularPOO(SocioBase):
-    CUOTA_BASE = 5000.0
+    CUOTA_BASE = 30000.0
     def calcular_cuota(self): return self.CUOTA_BASE
     def obtener_descripcion(self): return "Socio Regular: acceso basico al club."
 
 class SocioVIPPOO(SocioBase):
-    CUOTA_BASE = 5000.0
-    RECARGO_VIP = 1.0
+    CUOTA_BASE = 45000.0
+    RECARGO_VIP = 0.5
     def calcular_cuota(self): return self.CUOTA_BASE * (1 + self.RECARGO_VIP)
     def obtener_descripcion(self): return "Socio VIP: acceso total con beneficios premium."
 
 class SocioFamiliarPOO(SocioBase):
-    CUOTA_BASE = 5000.0
-    COSTO_POR_FAMILIAR = 1500.0
+    CUOTA_BASE = 30000.0
+    COSTO_POR_FAMILIAR = 15000.0
     def __init__(self, cantidad_familiares=1, **kwargs):
         super().__init__(**kwargs)
         self.__cantidad_familiares = max(1, cantidad_familiares)
