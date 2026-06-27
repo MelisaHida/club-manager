@@ -85,8 +85,17 @@ class SocioRegularPOO(SocioBase):
 
 class SocioVIPPOO(SocioBase):
     CUOTA_BASE = 45000.0
-    RECARGO_VIP = 0.5
-    def calcular_cuota(self): return self.CUOTA_BASE * (1 + self.RECARGO_VIP)
+    COSTO_POR_FAMILIAR = 22500.0
+    def __init__(self, cantidad_familiares=0, **kwargs):
+        super().__init__(**kwargs)
+        self.__cantidad_familiares = max(0, cantidad_familiares)
+    @property
+    def cantidad_familiares(self): return self.__cantidad_familiares
+    @cantidad_familiares.setter
+    def cantidad_familiares(self, v):
+        if v < 0: raise ValueError("No puede ser negativo")
+        self.__cantidad_familiares = v
+    def calcular_cuota(self): return self.CUOTA_BASE + self.__cantidad_familiares * self.COSTO_POR_FAMILIAR
     def obtener_descripcion(self): return "Socio VIP: acceso total con beneficios premium."
 
 class SocioFamiliarPOO(SocioBase):
@@ -141,7 +150,7 @@ class Socio(models.Model):
         d = Domicilio(self.calle, self.ciudad, self.provincia)
         kw = dict(nombre=self.nombre, apellido=self.apellido, email=self.email,
                   dni=self.dni, telefono=self.telefono, estado=self.estado, domicilio=d)
-        if self.tipo == "familiar":
+        if self.tipo in ("familiar", "vip"):
             kw["cantidad_familiares"] = self.cantidad_familiares
         return FabricaSocio.crear(self.tipo, **kw)
     def calcular_cuota(self): return self.como_objeto_poo().calcular_cuota()

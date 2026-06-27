@@ -10,6 +10,15 @@
 </div>
 
 <div style="max-width:700px">
+  {% if form.errors %}
+  <div style="background:#fee2e2;border:0.5px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:10px">
+    <span style="color:#dc2626;font-size:18px;flex-shrink:0">⚠</span>
+    <div>
+      <p style="font-size:14px;font-weight:500;color:#dc2626;margin:0 0 2px">No se pudo guardar el socio</p>
+      <p style="font-size:13px;color:#dc2626;margin:0;opacity:.85">Revisá los campos marcados antes de continuar.</p>
+    </div>
+  </div>
+  {% endif %}
   <form method="POST">
     {% csrf_token %}
 
@@ -100,7 +109,7 @@
   const tipoSelect = document.getElementById('id_tipo');
   const grupoFamiliares = document.getElementById('grupo-familiares');
   function toggleFamiliares() {
-    grupoFamiliares.style.display = tipoSelect.value === 'familiar' ? '' : 'none';
+    grupoFamiliares.style.display = tipoSelect.value === 'familiar' || tipoSelect.value === 'vip' ? '' : 'none';
   }
   tipoSelect.addEventListener('change', toggleFamiliares);
   toggleFamiliares();
